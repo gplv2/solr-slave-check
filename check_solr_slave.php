@@ -13,7 +13,6 @@ ini_set("max_input_time", "0");
 ini_set("memory_limit","500M");
 set_time_limit(0);
 
-
 /* Check if PHP version is sufficient for the things we use here
    $phpVersion = phpversion();
    if (function_exists("version_compare") && version_compare($phpVersion, "5.3.0",'<')) {
@@ -58,8 +57,7 @@ if (empty($options['input']) && empty($options['slave'])) {
    cliargs_print_usage_and_exit($cliargs);
 }
 
-/* GLENN */
-
+/* Real work starts here */
 $pos = strrpos($options['slave'], ':');
 if ($pos === false) { 
    // : is not found... so using standard port
@@ -92,22 +90,7 @@ if (!empty($options['tail'])) {
 }
 
 function check_slave($buf, $options) {
-   /*
-      192.168.128.20 -  -  [04/Jan/2013:20:27:49 +0000] "GET /solr-3.6.1/event/select/?qt=dismax&fq=%28id:1002458313+OR+uniqueid:1002458313%29&fq=channelid:%28118%29&fq=isevent:1&fq=countryid:%283%29&fq=-eventstatus60:%22-1%22&fl=id%2Ctown%2Csubtown%2Cuniqueid%2Ceventhtml%2Csourceid%2Ctitle%2Csummary%2Ccontent%2Cdatefrom%2Cdateto%2Cdatetext%2Curl%2CpriceticketingURL%2Cpricetext%2Cpricemin%2Cpricemax%2Cpricecurrency%2Cfree%2Csoldout%2Ccancelled%2Cpostponed%2Cimage%2Ceventimage%2Clocationtext%2Clocationid%2Cregionid%2Cregion%2CURLtext%2Ccategorisationtext%2Cvenuetext%2Cemailtext%2Corganizertext%2Cgeocodingaccuracy%2Cgeocodingaddress%2Ceventstatus60%2Clatitude%2Clongitude%2Csourceicon%2Cdateextracting%2Cday%2Cishidden%2Cmaintown%2Csubtown%2Cthemeid%2Cmineventdate0%2Ceventranking60%2Ceventcustomfield60%2Cday%2Cmappingid%2Cthemeid%2Cuniqueid&rows=1&start=0&wt=phps HTTP/1.1" 200 7729
-    */
-
    preg_match("/(^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})\s-\s(\s+)-(\s+)\[(.*)\]\s\"(.*)\"\s(\d+)\s(\d+)/", $buf, $results);
-
-   /*
-      [0] => 192.168.128.20 -  -  [04/Jan/2013:20:52:03 +0000] "GET /solr-3.6.1/event/select/?qt=dismax&fq=channelid:%2836%29&fq=isevent:1&fq=isdouble:0&fq=-crosssourcedoublechannelid:%2836%29&fq=-ishidden:1&fq=eventgroup21:%28+OR+%29&fq=(eventgroupstartdate21_:%5B%2A+TO+2013-01-04T23%3A59%3A59.999Z%5D+OR+eventgroupstartdate21_%3A%5B%2A+TO+2013-01-04T23%3A59%3A59.999Z%5D%29&fq=(eventgroupenddate21_:%5B2013-01-04T00%3A00%3A00.000Z+TO+%2A%5D+OR+eventgroupenddate21_%3A%5B2013-01-04T00%3A00%3A00.000Z+TO+%2A%5D%29&fq=day:%5B2013-01-04T00%3A00%3A00Z+TO+%2A%5D&fq=-id:%281502775932+OR+1502844256+OR+1502549632+OR+1502862230+OR+1502732576%29&fq=countryid:%281%29&fq=-eventstatus21:%22-1%22&fl=id%2C+uniqueid%2C+locationid%2C+title%2C+summary%2C+image%2C+town%2C+subtown%2C+region%2C+regionid%2C+datenext%2C+datefrom%2C+dateto%2C+venuetext%2C+ranking%2C+priceticketingURL%2C+pricemin%2C+eventimage%2C+eventgroup21+%2Cday%2Cmappingid%2Cthemeid%2Cuniqueid&sort=random_1138879541+desc&rows=3&start=0&wt=phps HTTP/1.1" 400 1379
-      [1] => 192.168.128.20
-      [2] =>  
-      [3] =>   
-      [4] => 04/Jan/2013:20:52:03 +0000
-      [5] => GET /solr-3.6.1/event/select/?qt=dismax&fq=channelid:%2836%29&fq=isevent:1&fq=isdouble:0&fq=-crosssourcedoublechannelid:%2836%29&fq=-ishidden:1&fq=eventgroup21:%28+OR+%29&fq=(eventgroupstartdate21_:%5B%2A+TO+2013-01-04T23%3A59%3A59.999Z%5D+OR+eventgroupstartdate21_%3A%5B%2A+TO+2013-01-04T23%3A59%3A59.999Z%5D%29&fq=(eventgroupenddate21_:%5B2013-01-04T00%3A00%3A00.000Z+TO+%2A%5D+OR+eventgroupenddate21_%3A%5B2013-01-04T00%3A00%3A00.000Z+TO+%2A%5D%29&fq=day:%5B2013-01-04T00%3A00%3A00Z+TO+%2A%5D&fq=-id:%281502775932+OR+1502844256+OR+1502549632+OR+1502862230+OR+1502732576%29&fq=countryid:%281%29&fq=-eventstatus21:%22-1%22&fl=id%2C+uniqueid%2C+locationid%2C+title%2C+summary%2C+image%2C+town%2C+subtown%2C+region%2C+regionid%2C+datenext%2C+datefrom%2C+dateto%2C+venuetext%2C+ranking%2C+priceticketingURL%2C+pricemin%2C+eventimage%2C+eventgroup21+%2Cday%2Cmappingid%2Cthemeid%2Cuniqueid&sort=random_1138879541+desc&rows=3&start=0&wt=phps HTTP/1.1
-      [6] => 400
-      [7] => 1379
-    */
 
    if (preg_last_error() == PREG_NO_ERROR) {
       $call['source_ip'] = $results[1];
@@ -138,6 +121,12 @@ function check_slave($buf, $options) {
    $url = sprintf('http://%s:%d%s',$options['slave'], $options['port'], $call['source_path']);
    // echo "Checking slave : $url\n";
 
+   /* Only do GET request */
+   if ($call['source_method'] !== 'GET') {
+      echo "Skipping non GET request : $url\n";
+      return;
+   }
+
    /* Don't send calls the slave made to the master again tot the slave */
    if (preg_match(sprintf("/%s/",$options['slave']), $call['source_ip'])) {
       echo "Skipping slave log entry: $url\n";
@@ -149,13 +138,6 @@ function check_slave($buf, $options) {
       echo sprintf("Skipping failed master log entry (%s)\n", $call['source_result']);
       return;
    }
-
-   /* Only do GET request */
-   if ($call['source_method'] !== 'GET') {
-      echo "Skipping non GET request : $url\n";
-      return;
-   }
-
 
    $ch = curl_init($url);
    curl_setopt($ch, CURLOPT_POST, false);
