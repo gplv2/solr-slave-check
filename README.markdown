@@ -10,10 +10,12 @@ Written by [Glenn Plas](http://byte-consult.be)
 
 ## Usage
 
-1. `-i`, OR --input <value> : The input file to get the requests from (required)
-2. `-s`, OR --slave <value> : host:port ( host can be an ip or a hostname) (required)
-3. `-t`, OR --tail          : Use tail on the file so you check in realtime, otherwise it will be read from start to end
-4. `-d`, OR --debug <value> : Debug flag level. ( value range 1..6 ) => Unused for now
+./check_solr_slave.php -i /var/log/jetty/2013_01_04.request.log -s 192.168.128.31:8080 -t
+
+1. `-i`, OR `--input <value>` : The input file to get the requests from (required)
+2. `-s`, OR `--slave <value>` : Format is host[:port] ( host can be an ip or a hostname) (required)
+3. `-t`, OR `--tail`          : Use tail on the file so you check in realtime, otherwise it will be read from start to end
+4. `-d`, OR `--debug <value>` : Debug flag level. ( value range 1..6 ) => Unused for now
 
 ## Gotchas
 
