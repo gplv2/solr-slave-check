@@ -13,11 +13,11 @@ ini_set("max_input_time", "0");
 ini_set("memory_limit","500M");
 set_time_limit(0);
 
-/* Check if PHP version is sufficient for the things we use here
-   $phpVersion = phpversion();
-   if (function_exists("version_compare") && version_compare($phpVersion, "5.3.0",'<')) {
+/* Check if PHP version is sufficient for the things we use here */
+$phpVersion = phpversion();
+if (function_exists("version_compare") && version_compare($phpVersion, "5.2.0",'<')) {
    die("Sorry!  Your PHP version is too old.  PEAR and this script requires at least PHP 5.3.0 for stable operation.");
-   }*/
+}
 
 // working dir
 $base= realpath( dirname(__FILE__));
@@ -110,8 +110,8 @@ function check_slave($buf, $options) {
       }
       else if (preg_last_error() == PREG_BAD_UTF8_ERROR) {
          print 'Bad UTF8 error!';
-      }
-      else if (preg_last_error() == PREG_BAD_UTF8_ERROR) {
+      } else if (preg_last_error() == PREG_BAD_UTF8_OFFSET_ERROR) {
+         // From php 5.3.0 onwards
          print 'Bad UTF8 offset error!';
       }
       exit();
